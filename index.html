@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stroke Risk Prediction</title>
+  </head>
+  <body>
+    <h2>Stroke Risk Prediction</h2>
+    <form id="predictForm">
+      <!-- Add input fields for each feature except target and Stroke Risk (%) -->
+      Age: <input type="number" name="age" /><br />
+      Gender: <input type="text" name="gender" /><br />
+      Hypertension: <input type="number" name="hypertension" /><br />
+      Heart Disease: <input type="number" name="heart_disease" /><br />
+      Smoking Status: <input type="text" name="smoking_status" /><br />
+      <!-- Add other fields as needed -->
+      <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+    <script>
+      document.getElementById("predictForm").onsubmit = async function (e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        const res = await fetch("/api/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json();
+        document.getElementById("result").innerText = "Prediction: " + (result.prediction ? "At Risk" : "Not At Risk");
+      };
+    </script>
+  </body>
+</html>
